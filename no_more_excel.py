@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import json
+import re
 from openpyxl import load_workbook, Workbook
 
 
@@ -32,7 +33,7 @@ def xlsx_to_json(ini="in.xlsx",out="out.json",start_index="A0",nb_columns=0,nb_i
     f.write(json.dumps(items,indent=3))
     f.close()
 
-def json_to_xlsx(duplicate,ini="in.json",out="out.xlsx",start_index="A0",nb_columns=0,nb_items=0):
+def json_to_xlsx(duplicate_from=None,ini="in.json",out="out.xlsx",start_index="A0",nb_columns=0,nb_items=0):
     """This function will write json
     object to a xlsx file as a
     set of lines using the
@@ -42,8 +43,8 @@ def json_to_xlsx(duplicate,ini="in.json",out="out.xlsx",start_index="A0",nb_colu
     items = json.load(f)
     f.close()
 
-    if duplicate:
-        wb  = load_workbook(duplicate)
+    if duplicate_from:
+        wb  = load_workbook(duplicate_from)
     else:
         wb = Workbook()
     ws = wb.active
@@ -72,8 +73,12 @@ def json_to_xlsx(duplicate,ini="in.json",out="out.xlsx",start_index="A0",nb_colu
 
 
 def i_to_xy(index):
-    x = ord(index[0])-ord('A')
-    y = int(index[1])
+    #TO DO: fair macher cette fonction pour les index de type AB11
+    num = re.compile(r"[0-9]+")
+    let = re.compile(r"[A-Z]+")
+    print (let.search(index))
+    x = ord(let.search(index))-ord('A')
+    y = int(num.search(index))
     return x,y
 
 
@@ -84,5 +89,4 @@ def xy_to_i(x, y):
     return index
 
 if __name__ == '__main__':
-    xlsx_to_json("exemple2.xlsx","exemple2.json",start_index="B6",nb_columns=5,nb_items=7)
-    json_to_xlsx("exemple3.json","exemple3.xlsx",start_index="B6",nb_columns=5,nb_items=7)
+    print("i_to_xy(AA11) = "+i_to_xy("AA11"))
