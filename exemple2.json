@@ -1,0 +1,44 @@
+[
+   {
+      "nom flux": "PH1", 
+      "addr dest": "196.0.0.12", 
+      "nom src": "localhost", 
+      "nom dest": "host1", 
+      "addr src": "127.0.0.1"
+   }, 
+   {
+      "nom flux": "PH1", 
+      "addr dest": "127.0.0.1", 
+      "nom src": "host1", 
+      "nom dest": "localhost", 
+      "addr src": "196.0.0.12"
+   }, 
+   {
+      "nom flux": "PH2", 
+      "addr dest": "10.20.56.32", 
+      "nom src": "host1", 
+      "nom dest": "host2", 
+      "addr src": "196.0.0.12"
+   }, 
+   {
+      "nom flux": "PH2", 
+      "addr dest": "196.0.0.12", 
+      "nom src": "host2", 
+      "nom dest": "host1", 
+      "addr src": "10.20.56.32"
+   }, 
+   {
+      "nom flux": "PH2", 
+      "addr dest": "10.20.56.33", 
+      "nom src": "host1", 
+      "nom dest": "host3", 
+      "addr src": "196.0.0.12"
+   }, 
+   {
+      "nom flux": "PH2", 
+      "addr dest": "196.0.0.12", 
+      "nom src": "host3", 
+      "nom dest": "host1", 
+      "addr src": "10.20.56.33"
+   }
+]
