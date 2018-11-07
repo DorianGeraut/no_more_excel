@@ -73,20 +73,30 @@ def json_to_xlsx(duplicate_from=None,ini="in.json",out="out.xlsx",start_index="A
 
 
 def i_to_xy(index):
-    #TO DO: fair macher cette fonction pour les index de type AB11
     num = re.compile(r"[0-9]+")
     let = re.compile(r"[A-Z]+")
-    print (let.search(index))
-    x = ord(let.search(index))-ord('A')
-    y = int(num.search(index))
+    letters = let.search(index).group()
+    x = 0
+    for i in range(len(letters)):
+        x += 27**i*(ord(letters[::-1][i])-ord('A')+1)
+    y = int(num.search(index).group())
     return x,y
 
 
 def xy_to_i(x, y):
-    index = ""
-    index += chr(ord('A')+x)
-    index += str(y)
-    return index
+    pow = 0
+    while 27**(pow) < x:
+        pow += 1
+    tmpx = x
+    letters = ""
+    for p in range(pow)[::-1]:
+        i = 1
+        while 27**p*i <= tmpx-27**p:
+            i += 1
+        tmpx -= 27**p*i
+        letters += chr(64+i)
+    numbers = str(y)
+    return letters+numbers
 
 if __name__ == '__main__':
     print("i_to_xy(AA11) = "+i_to_xy("AA11"))
