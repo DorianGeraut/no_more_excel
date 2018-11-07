@@ -77,23 +77,23 @@ def i_to_xy(index):
     let = re.compile(r"[A-Z]+")
     letters = let.search(index).group()
     x = 0
-    for i in range(len(letters)):
-        x += 27**i*(ord(letters[::-1][i])-ord('A')+1)
+    for p in range(len(letters)):
+        x += 26**p*(ord(letters[::-1][p])-ord('A')+1)
     y = int(num.search(index).group())
     return x,y
 
 
 def xy_to_i(x, y):
-    pow = 0
-    while 27**(pow) < x:
-        pow += 1
-    tmpx = x
+    def recurs(rest, list):
+        if rest == 0:
+            return 0
+        print(str(rest)+" append "+str(rest%26))
+        list.append((rest-1)%26+1)
+        recurs((rest-(rest-1)%26+1)/26, list)
+    letters_i = []
+    recurs(x, letters_i)
     letters = ""
-    for p in range(pow)[::-1]:
-        i = 1
-        while 27**p*i <= tmpx-27**p:
-            i += 1
-        tmpx -= 27**p*i
+    for i in letters_i[::-1]:
         letters += chr(64+i)
     numbers = str(y)
     return letters+numbers
