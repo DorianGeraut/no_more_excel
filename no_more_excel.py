@@ -2,6 +2,7 @@
 import sys
 import json
 import re
+from io import open
 from openpyxl import load_workbook, Workbook
 
 
@@ -13,9 +14,7 @@ def xlsx_to_json(ini="in.xlsx",out="out.json",start_index="A0",nb_columns=0,nb_i
     wb = load_workbook(ini)
     ws = wb.active
     result = []
-    start_x = i_to_xy(start_index)[0]
-    start_y = i_to_xy(start_index)[1]
-
+    start_x, start_y = i_to_xy(start_index)
     #reading the first line:
     fields=[]
     for x in range(start_x,nb_columns+start_x):
@@ -23,15 +22,15 @@ def xlsx_to_json(ini="in.xlsx",out="out.json",start_index="A0",nb_columns=0,nb_i
 
     #reading everything else:
     items = []
-    for y in range(start_y+1,nb_items+start_y):
+    for y in range(start_y+1,nb_items+start_y+1):
         item = {}
         for x in range(start_x,nb_columns+start_x):
             item[fields[x-start_x]] = ws[ xy_to_i(x, y)].value
         items.append(item)
 
-    f = open(out, 'w')
-    f.write(json.dumps(items,indent=3))
-    f.close()
+    with open(out, 'w', encoding='utf8') as f:
+        f.write(json.dumps(items,indent=3,ensure_ascii=False))
+        f.close()
 
 def json_to_xlsx(duplicate_from=None,ini="in.json",out="out.xlsx",start_index="A0",nb_columns=0,nb_items=0):
     """This function will write json
@@ -77,26 +76,26 @@ def i_to_xy(index):
     let = re.compile(r"[A-Z]+")
     letters = let.search(index).group()
     x = 0
-    for p in range(len(letters)):
-        x += 26**p*(ord(letters[::-1][p])-ord('A')+1)
+    for i in range(len(letters)):
+        x += 27**i*(ord(letters[::-1][i])-ord('A')+1)
     y = int(num.search(index).group())
     return x,y
 
 
 def xy_to_i(x, y):
-    def recurs(rest, list):
-        if rest == 0:
-            return 0
-        print(str(rest)+" append "+str(rest%26))
-        list.append((rest-1)%26+1)
-        recurs((rest-(rest-1)%26+1)/26, list)
-    letters_i = []
-    recurs(x, letters_i)
+    pow = 0
+    while 27**(pow) < x:
+        pow += 1
+    tmpx = x
     letters = ""
-    for i in letters_i[::-1]:
+    for p in range(pow)[::-1]:
+        i = 1
+        while 27**p*i <= tmpx-27**p:
+            i += 1
+        tmpx -= 27**p*i
         letters += chr(64+i)
     numbers = str(y)
     return letters+numbers
 
 if __name__ == '__main__':
-    print("i_to_xy(AA11) = "+i_to_xy("AA11"))
+    xlsx_to_json(ini=sys.argv[1],out=sys.argv[2],start_index=sys.argv[3],nb_columns=int(sys.argv[4]),nb_items=int(sys.argv[5]))

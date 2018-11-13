@@ -5,7 +5,6 @@ import re
 from openpyxl import load_workbook, Workbook
 
 def i_to_xy(index):
-    #TO DO: fair macher cette fonction pour les index de type AB11
     num = re.compile(r"[0-9]+")
     let = re.compile(r"[A-Z]+")
     letters = let.search(index).group()
@@ -31,13 +30,14 @@ def xy_to_i(x, y):
     numbers = str(y)
     return letters+numbers
 
-zob = i_to_xy("AHJ091")
+zob = i_to_xy("AZZ91")
 print("x ="+str(zob[0])+" y="+str(zob[1]))
 print("");print("");print("")
-zob = xy_to_i(955,91)
+x,y = i_to_xy("AZZ91")
+zob = xy_to_i(x, y)
 print("i ="+str(zob))
 
-
+exit(0)
 
 letters = ['A','B','C','B','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 for a in letters:
@@ -48,7 +48,7 @@ for a in letters:
                     for z in range(1,10):
                         test = a+b+c+str(x)+str(y)+str(z)
                         if ( test == xy_to_i(i_to_xy(test)[0],i_to_xy(test)[1])):
-                            #print(test+" ok")
+                            print(test+" ok")
                             lol = 1
                         else:
                             print(test+" FALSE")
