@@ -64,7 +64,6 @@ def json_to_xlsx(duplicate_from=None,ini="in.json",out="out.xlsx",start_index="A
     for item in items:
         x = 0
         for key in fields:
-            print("writing "+item[key]+" in "+xy_to_i(start_x+x,start_y+y))
             ws[ xy_to_i(start_x+x,start_y+y) ] = item[key]
             x += 1
         y += 1
